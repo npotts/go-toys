@@ -24,6 +24,10 @@ SOFTWARE.
 
 package stoppable
 
+import (
+	"sync"
+)
+
 /*Halter is a design pattern in that something can be started,
 and permanently stopped in an asynchronous and race-free way.*/
 type Halter interface {
@@ -36,6 +40,7 @@ and permanently stopped in an asynchronous and race-free way.*/
 type Stopable struct {
 	alive chan bool
 	kill  chan error
+	m     sync.Mutex
 }
 
 /*monitor emits alive bits until the channel is closed. It will close all channels
@@ -61,6 +66,8 @@ func (s *Stopable) Alive() bool {
 
 /*Die marks the the process as dead*/
 func (s *Stopable) Die() {
+	s.m.Lock()
+	defer s.m.Unlock()
 	if s.Alive() {
 		s.kill <- nil
 		<-s.kill //lockstep with monitor
