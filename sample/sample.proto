@@ -1,0 +1,48 @@
+syntax = "proto3";
+option go_package = "."; //path where to write generated source file 
+package sample;
+
+import "google/protobuf/timestamp.proto";
+
+
+/*Sample is a representative sample taken from some sort of sensor
+
+RecordTime and SampleTime use the builtin protobuf timestamp message 
+which is much more cross-platform and easy to convert to natural date/time
+representations.
+
+
+# Golang Specifics
+- It is not multiple go-routine safe, so caution is needed if Samples
+  are shared between go routines.
+
+*/
+message Sample {
+    /*RecordTime is the timestamp (UTC) when the sample is taken,
+     * in uncorrected form. Once this has been set, this should not
+     * ever be altered, and should be taken as a constant field.
+     */
+    google.protobuf.Timestamp RecordTime = 1;
+    
+    /*SampleTime is the best (corrected) (UTC) timestamp that the sample
+     * occurred.  This starts off as RecordTime. but could be altered for
+     * sensor time lag
+     */
+    google.protobuf.Timestamp SampleTime = 2;
+    
+    /*Raw is the raw data slice of sample data, unmolested or unaltered*/
+    bytes Raw = 3;
+    
+    
+    /*SensorID is the unique ID tied to the sensor */
+    string SensorID = 10;
+
+    
+    /*Tags is a list of tags associated with this sample.*/
+    repeated string Tags = 100;
+
+    /*Values is a map of decoded values from the raw sample, as well as any 
+     * post-sample calculations.  Values here can be anything so long as
+     * there isnt a name collission*/
+    map<string, double> values = 101;
+}
