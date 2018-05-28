@@ -1,5 +1,5 @@
-# go-patterns
-Bare and Simple Golang Design Patterns 
+# go-toys
 
-This is a small collection of Golang patterns I keep running into during my normal job.  Most of these make sense more with hardware, and may have bugs.  Your milage may vary.
+This is a set of patterns and (mostly) useless toys I have thrown together for experiments,
+and patterns I seem to run into.  YMMV - they are not bug free nor well tested.
 
